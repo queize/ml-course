@@ -75,7 +75,9 @@ class KNearestNeighbor:
                 # not use a loop over dimension, nor use np.linalg.norm().          #
                 #####################################################################
                 # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-                    dists
+                dists[i, j] = np.sqrt(
+                    np.sum((X[i] - self.X_train[j])**2)
+                )
                 # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
 
@@ -97,7 +99,9 @@ class KNearestNeighbor:
             # Do not use np.linalg.norm().                                        #
             #######################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
+            dists[i, :] = np.sqrt(
+                np.sum((X[i] - self.X_train)**2, axis=1)
+            )
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
 
@@ -125,11 +129,18 @@ class KNearestNeighbor:
         #       and two broadcast sums.                                         #
         #########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
+        A = X
+        B = self.X_train
+        M = num_test
+        N = num_train
+        A_dots = (A*A).sum(axis=1).reshape((M,1))*np.ones(shape=(1,N))
+        B_dots = (B*B).sum(axis=1)*np.ones(shape=(M,1))
+        D_squared =  A_dots + B_dots -2*A.dot(B.T)
+        dists = np.sqrt(D_squared)
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
 
-    def predict_labels(self, dists, k=1):
+    def  predict_labels(self, dists, k=1):
         """
         Given a matrix of distances between test points and training points,
         predict a label for each test point.
@@ -165,7 +176,7 @@ class KNearestNeighbor:
             # label.                                                                #
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
+            pass
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
